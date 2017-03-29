@@ -7,38 +7,43 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
+import Select from 'react-select';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './Home.css';
+import selectCss from '!!isomorphic-style-loader!css-loader?modules=false!react-select/dist/react-select.css';
+
+const options = [
+  { value: 'one', label: 'One' },
+  { value: 'two', label: 'Two' },
+];
 
 class Home extends React.Component {
-  static propTypes = {
-    news: PropTypes.arrayOf(PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      link: PropTypes.string.isRequired,
-      content: PropTypes.string,
-    })).isRequired,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      value: 'one',
+    };
+  }
+
+  logChange = (val) => {
+    console.log(`changing value to ${val.value}`);
+    this.setState({ value: val.value });
+  }
 
   render() {
     return (
-      <div className={s.root}>
-        <div className={s.container}>
-          <h1>React.js News</h1>
-          {this.props.news.map(item => (
-            <article key={item.link} className={s.newsItem}>
-              <h1 className={s.newsTitle}><a href={item.link}>{item.title}</a></h1>
-              <div
-                className={s.newsDesc}
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: item.content }}
-              />
-            </article>
-          ))}
-        </div>
+      <div>
+        <h1>React.js News</h1>
+        <Select
+          name="form-field-name"
+          value={this.state.value}
+          options={options}
+          onChange={this.logChange}
+        />
       </div>
     );
   }
 }
 
-export default withStyles(s)(Home);
+export default withStyles(selectCss)(Home);
